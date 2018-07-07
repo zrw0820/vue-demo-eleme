@@ -1,10 +1,14 @@
 <!-- has text line -->
 <template>
-  <div class="text-line">测试</div>
+  <div class="text-line">{{text}}</div>
 </template>
 
 <script type='text/ecmascript-6'>
-export default {};
+export default {
+  props: {
+    text: String
+  }
+};
 </script>
 
 <style lang='stylus' rel='stylesheet/stylus'>

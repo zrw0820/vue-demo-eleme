@@ -31,20 +31,36 @@
     <div class="background">
       <img :src="seller.avatar" alt="background" width="100%" height="100%">
     </div>
-    <div class="detail" v-show="detailShow">
-      <div class="detail-wrapper clearfix">
-        <div class="detail-main">
-          <h1 class="name">{{seller.name}}</h1>
-          <div class="star-wrapper">
-            <star :size="48" :score="seller.score"></star>
+    <transition name="detail-fade">
+      <div class="detail" v-show="detailShow">
+        <div class="detail-wrapper clearfix">
+          <div class="detail-main">
+            <h1 class="name">{{seller.name}}</h1>
+            <div class="star-wrapper">
+              <star :size="48" :score="seller.score"></star>
+            </div>
+            <div class="line">
+              <text-line text="优惠信息"></text-line>
+            </div>
+            <ul class="supports" v-if="seller.supports">
+              <li class="support-item" v-for="item in seller.supports" :key="item">
+                <span class="icon" :class="classMap[item.type]"></span>
+                <span class="text">{{item.description}}</span>
+              </li>
+            </ul>
+            <div class="line">
+              <text-line text="商家公告"></text-line>
+            </div>
+            <div class="bulletin">
+              <p class="content">{{seller.bulletin}}</p>
+            </div>
           </div>
-          <text-line></text-line>
+        </div>
+        <div class="detail-close" v-on:click="hideDetail">
+          <i class="icon-close"></i>
         </div>
       </div>
-      <div class="detail-close" v-on:click="hideDetail">
-        <i class="icon-close"></i>
-      </div>
-    </div>
+    </transition>
 </div>
 </template>
 
@@ -61,7 +77,7 @@ export default {
   },
   data () {
     return {
-      detailShow: true
+      detailShow: false
     };
   },
   methods: {
@@ -200,6 +216,7 @@ export default {
       height 100%
       overflow auto
       background rgba(7, 17, 27, 0.8)
+      -webkit-backdrop-filter blur(10px)
       .detail-wrapper
         width 100%
         min-height 100%
@@ -216,6 +233,44 @@ export default {
             margin-top 18px
             padding 2px 0
             text-align center
+          .line
+            margin 28px 36px 24px 36px
+          .supports
+            margin 0 36px
+            .support-item
+              padding 0 12px 12px 12px
+              font-size 0
+              &:last-child
+                padding-bottom 0
+              .icon
+                display inline-block
+                width 16px
+                height 16px
+                vertical-align top
+                margin-right 6px
+                background-size 16px 16px
+                background-repeat no-repeat
+                &.decrease
+                  bg-image('decrease_2')
+                &.discount
+                  bg-image('discount_2')
+                &.special
+                  bg-image('special_2')
+                &.invoice
+                  bg-image('invoice_2')
+                &.guarantee
+                  bg-image('guarantee_2')
+              .text
+                line-height 16px
+                font-size 12px
+                font-weight 200
+          .bulletin
+            margin 0 36px
+            .content
+                padding 0 12px
+                font-size 12px
+                font-weight 200
+                line-height 24px
       .detail-close
         position relative
         width 32px
@@ -223,4 +278,12 @@ export default {
         margin -64px auto 0 auto
         clear both
         font-size 32px
+    .detail-fade-enter-active
+    .detail-fade-leave-active {
+      transition: opacity .5s;
+    }
+    .detail-fade-enter
+    .detail-fade-leave-to {
+      opacity: 0;
+    }
 </style>
