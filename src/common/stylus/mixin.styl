@@ -1,0 +1,23 @@
+divider-horizontal-line($width, $color)
+  position relative
+  &:after
+    display block
+    position absolute
+    left 0
+    bottom 0
+    width 100%
+    border-top $width solid $color
+    content ''
+
+bg-image($url)
+  background-image url($url + "@2x.png")
+  @media (-webkit-min-device-pixel-ration: 3), (min-device-pixel-ration: 3)
+    background-image url($url + "@3x.png")
+
+scale-y()
+  @media (-webkit-min-device-pixel-ration: 1.5), (min-device-pixel-ration: 1.5)
+    -webkit-transform scaleY(0.7)
+    transform scaleY(0.7)
+  @media (-webkit-min-device-pixel-ration: 2), (min-device-pixel-ration: 2)
+    -webkit-transform scaleY(0.5)
+    transform scaleY(0.5)
