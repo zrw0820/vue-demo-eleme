@@ -1,6 +1,6 @@
-# sell
+# 仿饿了么
 
-> a sell app
+> 使用Vue实现的仿饿了么APP
 
 ## Build Setup
 
