@@ -21,3 +21,21 @@ scale-y()
   @media (-webkit-min-device-pixel-ration: 2), (min-device-pixel-ration: 2)
     -webkit-transform scaleY(0.5)
     transform scaleY(0.5)
+
+tag-icon($size, $ratio)
+  display inline-block
+  width $size
+  height $size
+  vertical-align top
+  background-size $size $size
+  background-repeat no-repeat
+  &.decrease
+    bg-image('decrease_' + $ratio)
+  &.discount
+    bg-image('discount_' + $ratio)
+  &.special
+    bg-image('special_' + $ratio)
+  &.invoice
+    bg-image('invoice_' + $ratio)
+  &.guarantee
+    bg-image('guarantee_' + $ratio)

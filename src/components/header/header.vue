@@ -14,7 +14,7 @@
           <span>{{seller.description}}/{{seller.deliveryTime}}分钟送达</span>
         </div>
         <div class="support" v-if="seller.supports">
-          <span class="icon" v-bind:class="classMap[seller.supports[0].type]"></span>
+          <span class="icon" v-bind:class="constants.classMap[seller.supports[0].type]"></span>
           <span class="text">{{seller.supports[0].description}}</span>
         </div>
       </div>
@@ -43,8 +43,8 @@
               <text-line text="优惠信息"></text-line>
             </div>
             <ul class="supports" v-if="seller.supports">
-              <li class="support-item" v-for="item in seller.supports" :key="item">
-                <span class="icon" :class="classMap[item.type]"></span>
+              <li class="support-item" v-for="(item, index) in seller.supports" :key="index">
+                <span class="icon" :class="constants.classMap[item.type]"></span>
                 <span class="text">{{item.description}}</span>
               </li>
             </ul>
@@ -67,6 +67,7 @@
 <script type='text/ecmascript-6'>
 import star from '../star/star';
 import textLine from '../common/textLine';
+import constants from '../../common/js/constants.js';
 
 export default {
   props: {
@@ -80,6 +81,9 @@ export default {
       detailShow: false
     };
   },
+  created () {
+    this.constants = constants;
+  },
   methods: {
     showDetail () {
       this.detailShow = true;
@@ -87,9 +91,6 @@ export default {
     hideDetail () {
       this.detailShow = false;
     }
-  },
-  created () {
-    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
   }
 };
 
@@ -136,23 +137,8 @@ export default {
           font-size 12px
         .support
           .icon
-            display inline-block
-            vertical-align top
-            width 12px
-            height 12px
+            tag-icon(12px, 1)
             margin-right 4px
-            background-size 12px 12px
-            background-repeat no-repeat
-            &.decrease
-              bg-image('decrease_1')
-            &.discount
-              bg-image('discount_1')
-            &.special
-              bg-image('special_1')
-            &.invoice
-              bg-image('invoice_1')
-            &.guarantee
-              bg-image('guarantee_1')
           .text
             line-height 12px;
             font-size 10px
@@ -243,23 +229,8 @@ export default {
               &:last-child
                 padding-bottom 0
               .icon
-                display inline-block
-                width 16px
-                height 16px
-                vertical-align top
+                tag-icon(16px, 2)
                 margin-right 6px
-                background-size 16px 16px
-                background-repeat no-repeat
-                &.decrease
-                  bg-image('decrease_2')
-                &.discount
-                  bg-image('discount_2')
-                &.special
-                  bg-image('special_2')
-                &.invoice
-                  bg-image('invoice_2')
-                &.guarantee
-                  bg-image('guarantee_2')
               .text
                 line-height 16px
                 font-size 12px
