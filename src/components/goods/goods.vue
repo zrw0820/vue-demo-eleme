@@ -13,7 +13,7 @@
     </div>
     <div class="foods-wrapper" ref="foods">
       <ul>
-        <li v-for="(item, index) in goods" :key="index" ref="food-item">
+        <li v-for="(item, index) in goods" :key="index" ref="foodItem">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li class="food-item" v-for="(food, foodIndex) in item.foods" :key="foodIndex">
