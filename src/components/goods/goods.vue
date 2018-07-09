@@ -1,9 +1,9 @@
 <!-- goods -->
 <template>
   <div class="goods">
-    <div class="menu-wrapper">
+    <div class="menu-wrapper" ref="menu">
       <ul>
-        <li v-for="(item, index) in goods" :key="index">
+        <li v-for="(item, index) in goods" :key="index" class="menu-li">
           <div class="menu-item">
             <span class="icon" v-if="item.type > 0" :class="constants.classMap[item.type]"></span>
             <span class="text">{{item.name}}</span>
@@ -11,7 +11,7 @@
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper">
+    <div class="foods-wrapper" ref="foods">
       <ul>
         <li v-for="(item, index) in goods" :key="index">
           <h1 class="title">{{item.name}}</h1>
@@ -43,6 +43,7 @@
 <script type='text/ecmascript-6'>
 
 import constants from '../../common/js/constants.js';
+import BScroll from 'better-scroll';
 
 const ERR_OK = 0;
 
@@ -59,8 +60,23 @@ export default {
       response = response.body;
       if (response.errno === ERR_OK) {
         this.goods = response.data;
+
+        this.$nextTick(() => {
+          this._initScroll();
+        });
       }
     });
+  },
+  methods: {
+    _initScroll () {
+      this.menuScroll = new BScroll(this.$refs.menu, {
+        scrollY: true
+      });
+
+      this.foodsScroll = new BScroll(this.$refs.foods, {
+        scrollY: true
+      });
+    }
   }
 };
 </script>
@@ -79,24 +95,28 @@ export default {
     .menu-wrapper
       width 80px
       background-color #f3f5f7
-      .menu-item
-        display table-cell
-        vertical-align middle
-        width 56px
-        height 54px
-        padding-left 12px
-        line-height 14px
-        font-size 0px
+      .menu-li
         divider-horizontal-line(1px, rgba(7, 17, 27, 0.1))
         &:after
-          width 56px
           left 12px
-        .icon
-          tag-icon(12px, 3)
-          margin-right 2px
-        .text
-          font-size 12px
-          vertical-align top
+          width 56px
+        &:last-child
+          &:after
+            display none
+        .menu-item
+          display table-cell
+          vertical-align middle
+          width 56px
+          height 54px
+          padding-left 12px
+          line-height 14px
+          font-size 0px
+          .icon
+            tag-icon(12px, 3)
+            margin-right 2px
+          .text
+            font-size 12px
+            vertical-align top
     .foods-wrapper
       flex 1
       .title
@@ -150,5 +170,4 @@ export default {
               font-size 10px
               color rgb(147, 153, 159)
               text-decoration line-through
-              vertical-align top
 </style>
