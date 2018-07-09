@@ -13,7 +13,7 @@
     </div>
     <div class="foods-wrapper" ref="foods">
       <ul>
-        <li v-for="(item, index) in goods" :key="index">
+        <li v-for="(item, index) in goods" :key="index" ref="food-item">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li class="food-item" v-for="(food, foodIndex) in item.foods" :key="foodIndex">
@@ -50,7 +50,8 @@ const ERR_OK = 0;
 export default {
   data () {
     return {
-      goods: []
+      goods: [],
+      foodsHeightGroup: []
     };
   },
   created () {
@@ -63,6 +64,7 @@ export default {
 
         this.$nextTick(() => {
           this._initScroll();
+          this._calHeight();
         });
       }
     });
@@ -76,6 +78,14 @@ export default {
       this.foodsScroll = new BScroll(this.$refs.foods, {
         scrollY: true
       });
+    },
+    _calHeight () {
+      let item = this.$refs.foodItem;
+      let height = 0;
+      for (let i = 0; i < item.length; i++) {
+        height += item[i].clientHeight;
+        this.foodsHeightGroup.push(height);
+      }
     }
   }
 };
@@ -130,9 +140,10 @@ export default {
       .food-item
         display flex
         flex-direction row
-        margin 18px
-        padding-bottom 18px
+        padding 18px
         divider-horizontal-line(1px, rgba(7, 17, 27, 0.1))
+        &:after
+          left 18px
         &:last-child
           &:after
             display none
@@ -153,21 +164,25 @@ export default {
             color rgb(147, 153, 159)
           .description
             margin-bottom 8px
+            line-height 12px
           .extra
             &:first-child
               margin-right 12px
           .price
             font-weight 700
             line-height 24px
+            font-size 0px
             .now
               display inline-block
               font-size 14px
               color rgb(240, 20, 20)
               margin-right 8px
+              vertical-align bottom
               &::first-letter
                 font-size 10px
             .old
               font-size 10px
               color rgb(147, 153, 159)
               text-decoration line-through
+              vertical-align bottom
 </style>
