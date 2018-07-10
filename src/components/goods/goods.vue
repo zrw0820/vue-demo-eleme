@@ -4,7 +4,7 @@
     <div class="menu-wrapper" ref="menu">
       <ul>
         <li v-for="(item, index) in goods" :key="index" class="menu-li" :class="{'select': index === selectIndex}">
-          <div class="menu-item">
+          <div class="menu-item" @click="_selectFoodItem($event, index)">
             <span class="icon" v-if="item.type > 0" :class="constants.classMap[item.type]"></span>
             <span class="text">{{item.name}}</span>
           </div>
@@ -85,7 +85,8 @@ export default {
   methods: {
     _initScroll () {
       this.menuScroll = new BScroll(this.$refs.menu, {
-        scrollY: true
+        scrollY: true,
+        click: true
       });
 
       this.foodsScroll = new BScroll(this.$refs.foods, {
@@ -98,13 +99,20 @@ export default {
       });
     },
     _calHeight () {
-      let item = this.$refs.foodItem;
+      let items = this.$refs.foodItem;
       let height = 0;
       this.foodsHeightGroup.push(height);
-      for (let i = 0; i < item.length; i++) {
-        height += item[i].clientHeight;
+      for (let i = 0; i < items.length; i++) {
+        height += items[i].clientHeight;
         this.foodsHeightGroup.push(height);
       }
+    },
+    _selectFoodItem (event, index) {
+      if (!event._constructed) {
+        return;
+      }
+      let items = this.$refs.foodItem;
+      this.foodsScroll.scrollToElement(items[index], 300);
     }
   }
 };
