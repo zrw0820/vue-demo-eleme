@@ -3,7 +3,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menu">
       <ul>
-        <li v-for="(item, index) in goods" :key="index" class="menu-li">
+        <li v-for="(item, index) in goods" :key="index" class="menu-li" :class="{'select': index === selectIndex}">
           <div class="menu-item">
             <span class="icon" v-if="item.type > 0" :class="constants.classMap[item.type]"></span>
             <span class="text">{{item.name}}</span>
@@ -51,7 +51,8 @@ export default {
   data () {
     return {
       goods: [],
-      foodsHeightGroup: []
+      foodsHeightGroup: [],
+      scrollY: 0
     };
   },
   created () {
@@ -69,6 +70,18 @@ export default {
       }
     });
   },
+  computed: {
+    selectIndex () {
+      for (let i = 0; i < this.foodsHeightGroup.length - 1; i++) {
+        let start = this.foodsHeightGroup[i];
+        let end = this.foodsHeightGroup[i + 1];
+        if (this.scrollY >= start && this.scrollY < end) {
+          return i;
+        }
+      }
+      return 0;
+    }
+  },
   methods: {
     _initScroll () {
       this.menuScroll = new BScroll(this.$refs.menu, {
@@ -76,12 +89,18 @@ export default {
       });
 
       this.foodsScroll = new BScroll(this.$refs.foods, {
-        scrollY: true
+        scrollY: true,
+        probeType: 3
+      });
+
+      this.foodsScroll.on('scroll', (pos) => {
+        this.scrollY = Math.abs(Math.round(pos.y));
       });
     },
     _calHeight () {
       let item = this.$refs.foodItem;
       let height = 0;
+      this.foodsHeightGroup.push(height);
       for (let i = 0; i < item.length; i++) {
         height += item[i].clientHeight;
         this.foodsHeightGroup.push(height);
@@ -113,12 +132,19 @@ export default {
         &:last-child
           &:after
             display none
+        &.select
+            background-color #fff
+            font-weight 700
+            margin-top -1px
+            &:after
+              display none
         .menu-item
           display table-cell
           vertical-align middle
           width 56px
           height 54px
           padding-left 12px
+          padding-right 12px
           line-height 14px
           font-size 0px
           .icon
