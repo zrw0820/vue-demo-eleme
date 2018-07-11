@@ -4,7 +4,7 @@
     <div class="menu-wrapper" ref="menu">
       <ul>
         <li v-for="(item, index) in goods" :key="index" class="menu-li" :class="{'select': index === selectIndex}">
-          <div class="menu-item" @click="_selectFoodItem($event, index)">
+          <div class="menu-item" @click="_selectFoodItem(index)">
             <span class="icon" v-if="item.type > 0" :class="constants.classMap[item.type]"></span>
             <span class="text">{{item.name}}</span>
           </div>
@@ -32,11 +32,15 @@
                   <span class="old" v-if="!food.oldPrice">￥{{food.oldPrice}}0.00</span>
                 </div>
               </div>
+              <div class="car-control-wrapper">
+                <car-control :food="food"></car-control>
+              </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <shopcar :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :selectFoods="selectFoods"></shopcar>
   </div>
 </template>
 
@@ -44,10 +48,15 @@
 
 import constants from '../../common/js/constants.js';
 import BScroll from 'better-scroll';
+import shopcar from '../shopcar/shopcar';
+import carControl from '../shopcar/carcontrol';
 
 const ERR_OK = 0;
 
 export default {
+  props: {
+    seller: Object
+  },
   data () {
     return {
       goods: [],
@@ -80,6 +89,15 @@ export default {
         }
       }
       return 0;
+    },
+    selectFoods () {
+      let selectFoods = [];
+      this.goods.forEach(good => {
+        good.foods.filter(food => food.count > 0).forEach(food => {
+          selectFoods.push(food);
+        });
+      });
+      return selectFoods;
     }
   },
   methods: {
@@ -91,11 +109,12 @@ export default {
 
       this.foodsScroll = new BScroll(this.$refs.foods, {
         scrollY: true,
-        probeType: 3
+        probeType: 3,
+        click: true
       });
 
       this.foodsScroll.on('scroll', (pos) => {
-        this.scrollY = Math.abs(Math.round(pos.y));
+        this.scrollY = Math.abs(pos.y);
       });
     },
     _calHeight () {
@@ -107,13 +126,14 @@ export default {
         this.foodsHeightGroup.push(height);
       }
     },
-    _selectFoodItem (event, index) {
-      if (!event._constructed) {
-        return;
-      }
+    _selectFoodItem (index) {
       let items = this.$refs.foodItem;
       this.foodsScroll.scrollToElement(items[index], 300);
     }
+  },
+  components: {
+    shopcar,
+    'car-control': carControl
   }
 };
 </script>
@@ -200,23 +220,26 @@ export default {
             margin-bottom 8px
             line-height 12px
           .extra
+            margin-bottom 8px
             &:first-child
               margin-right 12px
           .price
+            display flex
+            align-items center
             font-weight 700
-            line-height 24px
-            font-size 0px
             .now
               display inline-block
               font-size 14px
               color rgb(240, 20, 20)
               margin-right 8px
-              vertical-align bottom
               &::first-letter
                 font-size 10px
             .old
               font-size 10px
               color rgb(147, 153, 159)
               text-decoration line-through
-              vertical-align bottom
+        .car-control-wrapper
+          position absolute
+          right 10px
+          bottom 6px
 </style>
