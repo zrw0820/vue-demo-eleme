@@ -2,8 +2,8 @@
 <template>
   <div class="control">
     <transition name="move">
-      <div class="sub" @click="sub()" v-show="food.count > 0">
-        <i class="icon-remove_circle_outline"></i>
+      <div class="sub" @click="sub()" v-show="food.count > 0" >
+          <i class="icon-remove_circle_outline"></i>
       </div>
     </transition>
     <transition name="move">
@@ -11,7 +11,7 @@
         {{food.count}}
       </div>
     </transition>
-    <div class="add" @click="add()">
+    <div class="add" @click="add($event)">
       <i class="icon-add_circle"></i>
     </div>
   </div>
@@ -30,12 +30,13 @@ export default {
         this.food.count--;
       }
     },
-    add () {
+    add (event) {
       if (!this.food.count) {
         Vue.set(this.food, 'count', 1);
       } else {
         this.food.count++;
       }
+      console.log(event);
     }
   }
 };
